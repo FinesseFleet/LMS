@@ -28,10 +28,7 @@ const ChapterIdPage = async ({
     where: {
       id: params.chapterId,
       courseId: params.courseId
-    },
-    include: {
-      muxData: true,
-    },
+    }
   });
 
   if (!chapter) {

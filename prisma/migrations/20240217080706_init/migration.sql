@@ -43,7 +43,7 @@ CREATE TABLE `Chapter` (
     `id` VARCHAR(191) NOT NULL,
     `title` VARCHAR(191) NOT NULL,
     `description` TEXT NULL,
-    `videoUrl` TEXT NULL,
+    `videoUrl` TEXT,
     `position` INTEGER NOT NULL,
     `isPublished` BOOLEAN NOT NULL DEFAULT false,
     `isFree` BOOLEAN NOT NULL DEFAULT false,
@@ -52,17 +52,6 @@ CREATE TABLE `Chapter` (
     `updatedAt` DATETIME(3) NOT NULL,
 
     INDEX `Chapter_courseId_idx`(`courseId`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `MuxData` (
-    `id` VARCHAR(191) NOT NULL,
-    `assetId` VARCHAR(191) NOT NULL,
-    `playbackId` VARCHAR(191) NULL,
-    `chapterId` VARCHAR(191) NOT NULL,
-
-    UNIQUE INDEX `MuxData_chapterId_key`(`chapterId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

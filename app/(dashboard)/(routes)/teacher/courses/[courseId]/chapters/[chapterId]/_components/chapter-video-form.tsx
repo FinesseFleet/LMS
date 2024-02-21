@@ -2,26 +2,22 @@
 
 import * as z from "zod";
 import axios from "axios";
-import MuxPlayer from "@mux/mux-player-react";
 import { Pencil, PlusCircle, Video } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { Chapter, MuxData } from "@prisma/client";
-import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { FileUpload } from "@/components/file-upload";
+import { Input } from "@/components/ui/input";
 
 interface ChapterVideoFormProps {
-  initialData: Chapter & { muxData?: MuxData | null };
+  initialData: Chapter;
   courseId: string;
   chapterId: string;
 };
 
-const formSchema = z.object({
-  videoUrl: z.string().min(1),
-});
 
 export const ChapterVideoForm = ({
   initialData,
@@ -29,14 +25,20 @@ export const ChapterVideoForm = ({
   chapterId,
 }: ChapterVideoFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [videoUrl, setVideoUrl] = useState('');
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
   const router = useRouter();
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  
+
+  const onSubmit = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    
+    
     try {
-      await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
+      axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, {videoUrl: videoUrl});
       toast.success("Chapter updated");
       toggleEdit();
       router.refresh();
@@ -56,7 +58,7 @@ export const ChapterVideoForm = ({
           {!isEditing && !initialData.videoUrl && (
             <>
               <PlusCircle className="h-4 w-4 mr-2" />
-              Add a video
+              Add a video link
             </>
           )}
           {!isEditing && initialData.videoUrl && (
@@ -64,40 +66,25 @@ export const ChapterVideoForm = ({
               <Pencil className="h-4 w-4 mr-2" />
               Edit video
             </>
-          )}
+          )} 
         </Button>
       </div>
-      {!isEditing && (
-        !initialData.videoUrl ? (
-          <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md">
-            <Video className="h-10 w-10 text-slate-500" />
-          </div>
-        ) : (
-          <div className="relative aspect-video mt-2">
-            <MuxPlayer
-              playbackId={initialData?.muxData?.playbackId || ""}
-            />
-          </div>
-        )
-      )}
+      
       {isEditing && (
         <div>
-          <FileUpload
-            endpoint="chapterVideo"
-            onChange={(url) => {
-              if (url) {
-                onSubmit({ videoUrl: url });
-              }
-            }}
-          />
-          <div className="text-xs text-muted-foreground mt-4">
-           Upload this chapter&apos;s video
-          </div>
-        </div>
-      )}
-      {initialData.videoUrl && !isEditing && (
-        <div className="text-xs text-muted-foreground mt-2">
-          Videos can take a few minutes to process. Refresh the page if video does not appear.
+          <form className="space-y-4 mt-4" onSubmit={onSubmit}>
+            <Input
+                type="text"
+                placeholder="Enter YouTube video URL"
+                value={videoUrl}
+                onChange={(e) => setVideoUrl(e.target.value)}
+            />
+            <Button type="submit">Save</Button>
+          </form>
+
+              <div className="text-xs text-muted-foreground mt-4">
+                Upload this chapter&apos;s youtube video link
+              </div>
         </div>
       )}
     </div>
