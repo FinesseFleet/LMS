@@ -59,8 +59,14 @@ export const VideoPlayer = ({
     //axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, {videoUrl: videoUrl});
     function videoUrlId(){      
       if (!videoUrl) return;
-      const linkArray = videoUrl.toString().split('be/');
-      const youtubeId = linkArray[1];
+      let youtubeId ="";
+      if(videoUrl.length> 11){
+        const linkArray = videoUrl.toString().split('be/');
+        youtubeId = linkArray[1];
+      }else{
+        youtubeId = videoUrl;
+      }
+      
       return youtubeId;
     }
     
