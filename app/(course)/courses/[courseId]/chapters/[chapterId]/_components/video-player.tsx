@@ -70,6 +70,11 @@ export const VideoPlayer = ({
       return youtubeId;
     }
     
+
+
+
+
+    
     let p1 = `http://www.youtube-nocookie.com/embed/${videoUrlId()}`;    
     let p2 = "?rel=0";  
 
