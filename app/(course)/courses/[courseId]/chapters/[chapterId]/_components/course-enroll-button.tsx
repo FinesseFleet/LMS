@@ -22,8 +22,15 @@ export const CourseEnrollButton = ({
     try {
       setIsLoading(true);
 
-      const response = await axios.post(`/api/courses/${courseId}/checkout`)
-
+      const response = await axios({
+        method: 'post', //you can set what request you want to be
+        url: `/api/courses/${courseId}/checkout`,
+        headers: {
+          'Access-Control-Allow-Origin': 'http://localhost:3000',
+        }
+      }
+      )
+      //const _window = window as any;
       window.location.assign(response.data.url);
     } catch {
       toast.error("Something went wrong");

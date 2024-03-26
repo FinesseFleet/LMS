@@ -75,9 +75,12 @@ export async function POST(
         }
       });
     }
+    const customer = await stripe.customers.create({
+          email: user.emailAddresses[0].emailAddress,
+        });
 
     const session = await stripe.checkout.sessions.create({
-      customer: stripeCustomer.stripeCustomerId,
+      customer: customer.id,
       line_items,
       mode: 'payment',
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/courses/${course.id}?success=1`,
@@ -94,3 +97,5 @@ export async function POST(
     return new NextResponse("Internal Error", { status: 500 })
   }
 }
+
+//INSERT INTO `lms`.`purchase` (`id`, `userId`, `courseId`, `createdAt`, `updatedAt`) VALUES ('2', 'user_2cXH5htrCIo3wiiyoxSgDo8AUAg', '995a7d65-f228-40bb-bb24-7f40b29116d5', '2024-02-27 16:19:53.193', '2024-02-27 16:19:53.193');
